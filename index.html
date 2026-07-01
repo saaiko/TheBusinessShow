@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>غرفة القرار — The Decision Room · CNN Business Arabic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2EC;        /* warm white */
+    --paper-2:#EFE9DF;      /* warmer panel */
+    --ink:#1B1A18;          /* near-black */
+    --ink-soft:#4A473F;     /* muted ink */
+    --line:#DAD2C4;         /* hairline */
+    --wood:#C7A56B;         /* pale oak accent */
+    --stone:#E5DDCE;        /* stone */
+    --red:#B01E2E;          /* restrained CNNBA red */
+    --red-deep:#8C1622;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Tajawal',system-ui,'Segoe UI',sans-serif;
+    background:var(--paper); color:var(--ink);
+    -webkit-font-smoothing:antialiased; line-height:1.75;
+  }
+  h1,h2,h3,.display{font-family:'Cairo','Tajawal',sans-serif;font-weight:900;line-height:1.2}
+
+  /* ---- Deck scaffolding: full-screen vertical scroll-snap slides ---- */
+  .deck{scroll-snap-type:y mandatory; height:100vh; overflow-y:scroll}
+  .slide{
+    scroll-snap-align:start; min-height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:6vh 6vw; position:relative;
+    border-bottom:1px solid var(--line);
+  }
+  .inner{width:100%; max-width:var(--maxw); margin:0 auto}
+
+  /* Slide number + kicker */
+  .kicker{
+    display:inline-flex; align-items:center; gap:.6rem;
+    font-family:'Cairo'; font-weight:700; letter-spacing:.02em;
+    font-size:.82rem; color:var(--red); text-transform:uppercase;
+    margin-bottom:1.4rem;
+  }
+  .kicker::before{content:""; width:34px; height:2px; background:var(--red); display:inline-block}
+  .snum{
+    position:absolute; top:3.4vh; left:6vw;
+    font-family:'Cairo'; font-weight:700; font-size:.8rem; color:var(--ink-soft); opacity:.5;
+    letter-spacing:.08em;
+  }
+  .brandmark{
+    position:absolute; top:3.4vh; right:6vw;
+    font-family:'Cairo'; font-weight:900; font-size:.82rem; letter-spacing:.02em; color:var(--ink);
+  }
+  .brandmark b{color:var(--red)}
+
+  h2.title{font-size:clamp(2rem,4.4vw,3.4rem); letter-spacing:-.01em}
+  h3.sub{font-size:clamp(1.15rem,2vw,1.5rem); font-weight:700; color:var(--ink)}
+  .lead{font-size:clamp(1.05rem,1.6vw,1.35rem); color:var(--ink-soft); max-width:60ch}
+  .fine{font-size:.95rem; color:var(--ink-soft)}
+  .accent{color:var(--red)}
+  .rule{height:1px;background:var(--line);margin:2rem 0}
+
+  /* Cover */
+  .cover{
+    background:linear-gradient(180deg,rgba(20,18,16,.30),rgba(20,18,16,.72)),
+      url('https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053405_3b0ed190-9a3e-412f-b147-bcb06c09c9b6.png') center/cover no-repeat;
+    color:#fff;
+  }
+  .cover .inner{text-align:center}
+  .cover .eyebrow{font-family:'Cairo';font-weight:700;letter-spacing:.35em;font-size:.9rem;color:#fff;opacity:.85;margin-bottom:1.5rem}
+  .cover h1{font-size:clamp(3rem,9vw,7rem); color:#fff; text-shadow:0 2px 30px rgba(0,0,0,.4)}
+  .cover .en{font-family:'Cairo';font-weight:600;letter-spacing:.3em;font-size:clamp(.9rem,2vw,1.4rem);color:var(--wood);margin-top:.6rem}
+  .cover .tag{font-size:clamp(1.05rem,2vw,1.4rem);color:#fff;opacity:.92;margin-top:2rem;max-width:44ch;margin-inline:auto}
+  .cover .foot{margin-top:3rem;font-family:'Cairo';font-weight:700;letter-spacing:.04em;color:#fff}
+  .cover .foot b{color:var(--red)}
+  .scrollcue{position:absolute;bottom:4vh;left:50%;transform:translateX(-50%);color:#fff;opacity:.8;font-size:.85rem;font-family:'Cairo'}
+  .scrollcue span{display:block;text-align:center;animation:bob 1.8s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  /* Grids */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2.4rem;align-items:center}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+  @media(max-width:820px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:1.6rem 1.5rem;
+    box-shadow:0 1px 0 rgba(0,0,0,.02);
+  }
+  .card .n{font-family:'Cairo';font-weight:900;color:var(--red);font-size:1.1rem}
+  .card h4{font-family:'Cairo';font-weight:900;font-size:1.15rem;margin:.4rem 0 .5rem}
+  .card p{font-size:.98rem;color:var(--ink-soft)}
+  .card.soft{background:var(--paper-2);border-color:var(--stone)}
+
+  .imgframe{border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px -30px rgba(0,0,0,.5)}
+  .imgframe img{display:block;width:100%;height:100%;object-fit:cover}
+  figcaption{font-size:.85rem;color:var(--ink-soft);margin-top:.7rem;font-family:'Cairo';font-weight:600}
+
+  /* Movement timeline */
+  .moves{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:1rem;border-top:2px solid var(--ink)}
+  .move{padding:1.6rem 1.2rem;border-inline-start:1px solid var(--line);position:relative}
+  .move:first-child{border-inline-start:none}
+  .move .time{font-family:'Cairo';font-weight:900;font-size:2.2rem;color:var(--red);line-height:1}
+  .move .unit{font-size:.85rem;color:var(--ink-soft)}
+  .move h4{font-family:'Cairo';font-weight:900;font-size:1.25rem;margin:.7rem 0 .4rem}
+  .move p{font-size:.92rem;color:var(--ink-soft)}
+  @media(max-width:820px){.moves{grid-template-columns:1fr}.move{border-inline-start:none;border-top:1px solid var(--line)}}
+
+  /* Runsheet */
+  .run{width:100%;border-collapse:collapse;font-size:.98rem}
+  .run th,.run td{text-align:right;padding:.85rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}
+  .run th{font-family:'Cairo';font-weight:700;color:var(--red);font-size:.85rem;letter-spacing:.02em}
+  .run td.t{font-family:'Cairo';font-weight:900;color:var(--ink);white-space:nowrap;width:120px}
+  .run td.seg{font-family:'Cairo';font-weight:700;width:210px}
+  .run tr:hover{background:var(--paper-2)}
+
+  /* Stat cards */
+  .stat{background:var(--paper-2);border:1px solid var(--stone);border-radius:14px;padding:1.4rem}
+  .stat .big{font-family:'Cairo';font-weight:900;font-size:2.4rem;color:var(--red);line-height:1}
+  .stat .lbl{font-size:.92rem;color:var(--ink-soft);margin-top:.4rem}
+
+  /* Quote / Maya moment */
+  .quote{
+    background:var(--ink);color:#fff;border-radius:18px;padding:3rem;position:relative;overflow:hidden;
+  }
+  .quote::before{content:"”";position:absolute;top:-1.5rem;inset-inline-start:1.5rem;font-family:'Cairo';font-size:9rem;color:var(--red);opacity:.5}
+  .quote p{font-size:clamp(1.15rem,2vw,1.6rem);line-height:1.9;position:relative}
+  .quote .who{margin-top:1.4rem;font-family:'Cairo';font-weight:700;color:var(--wood)}
+
+  /* Ecosystem chips */
+  .chips{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.5rem 1.1rem;font-size:.92rem;font-family:'Cairo';font-weight:600}
+  .chip.red{background:var(--red);color:#fff;border-color:var(--red)}
+  .chip.wood{background:var(--wood);color:#2a2410;border-color:var(--wood)}
+
+  /* Season table */
+  .season{width:100%;border-collapse:collapse;font-size:.9rem}
+  .season th,.season td{text-align:right;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
+  .season th{font-family:'Cairo';font-weight:700;color:var(--red);font-size:.8rem}
+  .season td.ep{font-family:'Cairo';font-weight:900;color:var(--red);width:40px;text-align:center}
+  .season tr:hover{background:var(--paper-2)}
+
+  /* Bullets */
+  ul.clean{list-style:none;margin-top:1rem}
+  ul.clean li{padding:.55rem 0 .55rem 0;padding-inline-start:1.6rem;position:relative;color:var(--ink-soft);font-size:1.02rem;border-bottom:1px dashed var(--line)}
+  ul.clean li::before{content:"";position:absolute;inset-inline-start:0;top:1.15rem;width:8px;height:8px;background:var(--red);border-radius:2px}
+  ul.clean li b{color:var(--ink)}
+
+  .pill{display:inline-block;background:var(--red);color:#fff;font-family:'Cairo';font-weight:700;font-size:.78rem;padding:.25rem .8rem;border-radius:999px;letter-spacing:.03em}
+  .pill.ghost{background:transparent;color:var(--red);border:1px solid var(--red)}
+
+  /* Palette swatches */
+  .sw{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+  .swatch{flex:1;min-width:90px;border-radius:12px;height:96px;border:1px solid var(--line);display:flex;align-items:flex-end;padding:.5rem;font-family:'Cairo';font-weight:700;font-size:.72rem}
+  .swatch small{background:rgba(255,255,255,.85);padding:.15rem .4rem;border-radius:6px}
+
+  /* Nav dots */
+  .nav{position:fixed;top:50%;left:1.4rem;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:.55rem}
+  .nav a{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.2s;display:block}
+  .nav a:hover,.nav a.on{background:var(--red);transform:scale(1.35)}
+  .progress{position:fixed;top:0;right:0;height:3px;background:var(--red);z-index:60;width:0}
+  @media(max-width:820px){.nav{display:none}}
+
+  .two-list{columns:2;column-gap:2.5rem}
+  .two-list li{break-inside:avoid}
+  @media(max-width:820px){.two-list{columns:1}}
+
+  footer.end{background:var(--ink);color:#fff}
+  footer.end h2{color:#fff;font-size:clamp(2rem,4vw,3.4rem)}
+  footer.end .accentline{color:var(--wood)}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="nav" id="nav"></nav>
+
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide cover" id="s1">
+    <div class="inner">
+      <div class="eyebrow">CNN BUSINESS ARABIC · البرنامج الأسبوعي الرئيسي</div>
+      <h1>غرفة القرار</h1>
+      <div class="en">THE DECISION ROOM</div>
+      <p class="tag">ليس مجرد برنامج حواري آخر... بل منصّة تُطرح فيها أهم القرارات الاقتصادية في المنطقة، وتُختبر، ثم تُترجم إلى لغة يفهمها كل مشاهد.</p>
+      <div class="foot">مع <b>مايا</b> · الحلقة التجريبية: القطاع العقاري</div>
+    </div>
+    <div class="scrollcue"><span>مرّر للأسفل ↓</span></div>
+  </section>
+
+  <!-- 02 THE IDEA -->
+  <section class="slide" id="s2">
+    <span class="snum">02</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الفكرة</div>
+      <div class="grid-2">
+        <div>
+          <h2 class="title">شخصٌ واحد.<br>قرارٌ واحد.<br><span class="accent">حوار لا يتنازل.</span></h2>
+        </div>
+        <div>
+          <p class="lead">شخصٌ يملك رأس مال حقيقيًّا أو صلاحية قرار فعلية، في حوار عربي معدٍّ وغير متسرّع، يُضغط فيه على الخيارات التي يتخذها فعلًا بشأن المال — لا على نقاط حديثه الإعلامية المُعلَّبة.</p>
+          <div class="rule"></div>
+          <p class="fine"><b>الوعد للمشاهد:</b> هذه هي الغرفة التي يُفسِّر فيها أصحاب القرار خياراتهم، ويطرح عليهم الأسئلة الصعبة مَن يملك من الثقل ما يُخوِّله ذلك.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 WHY MAYA -->
+  <section class="slide" id="s3">
+    <span class="snum">03</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">لماذا مايا</div>
+      <div class="grid-2">
+        <figure class="imgframe">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053405_05522b0d-0d1c-4580-850c-149ced899052.png" alt="مايا في غرفة القرار">
+        </figure>
+        <div>
+          <h2 class="title">الميزة الحقيقية<br>ليست الطاولة...<br>بل <span class="accent">من يجلس خلفها.</span></h2>
+          <p class="lead" style="margin-top:1.2rem">خلفيتها المتعددة التخصصات هي الميزة: ليست المتشددة الاقتصادية ولا المدافعة عن فئة بعينها. لذلك يثق بها الضيوف من مختلف القطاعات في أنها ستكون منصفة، ويراها الجمهور <b>صوتًا مؤسسيًّا لا صوتًا فئويًّا.</b></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ANATOMY -->
+  <section class="slide" id="s4">
+    <span class="snum">04</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">البنية والتشريح</div>
+      <h2 class="title">أربع حركات متأنية <span class="fine" style="font-weight:400">— حلقة ~24 دقيقة، بأسلوب رقمي أولًا</span></h2>
+      <div class="moves">
+        <div class="move"><div class="time">90<span class="unit">ثانية</span></div><h4>الموجز</h4><p>تُحدِّد المقدِّمة القرار الواحد الذي تتمحور حوله الحلقة — لا السيرة الذاتية، بل الخيار.</p></div>
+        <div class="move"><div class="time">16–18<span class="unit">دقيقة</span></div><h4>الغرفة</h4><p>المقابلة الجوهرية. ضيف واحد، عمق حقيقي، رحلة عبر ثلاثة أو أربعة قرارات فعلية.</p></div>
+        <div class="move"><div class="time">3–4<span class="unit">دقائق</span></div><h4>الكرسي المقابل</h4><p>الميكانيكية المميّزة — يُواجَه الضيف بأقوى رأي معارض، مصدره شخص حقيقي.</p></div>
+        <div class="move"><div class="time">90<span class="unit">ثانية</span></div><h4>الخلاصة</h4><p>تتجه المقدِّمة نحو الكاميرا وتُترجم الحوار إلى ما يعنيه لمال المشاهد أو عمله.</p></div>
+      </div>
+      <p class="fine" style="margin-top:1.4rem">القاعدة الذهبية: <b class="accent">لا ينتهي البرنامج أبدًا بالضيف — بل ينتهي بك أنت.</b></p>
+    </div>
+  </section>
+
+  <!-- 05 OPPOSING CHAIR -->
+  <section class="slide" id="s5">
+    <span class="snum">05</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الميكانيكية المميّزة</div>
+      <div class="grid-2">
+        <div>
+          <h2 class="title">الكرسي المقابل</h2>
+          <p class="lead" style="margin-top:1rem">قبل كل تسجيل، يجمع الفريق تحديًّا حادًّا موجَّهًا للضيف من طرف مقابل حقيقي — منافس، محلل متشكك، مؤسِّس احترق، أو مواطن تأثر بالقرار. في منتصف المقابلة تطرحه المقدِّمة مباشرةً وتُلزم الضيف بالرد أمام الكاميرا.</p>
+          <div class="rule"></div>
+          <div class="grid-3" style="gap:.9rem">
+            <div class="card soft"><div class="n">01</div><h4>احتكاك حقيقي</h4><p>اللحظة التي تجعل المقاطع تنتشر.</p></div>
+            <div class="card soft"><div class="n">02</div><h4>استقلالية تحريرية</h4><p>مؤشر يثبت أن CNNBA ليست مُستتبَعة.</p></div>
+            <div class="card soft"><div class="n">03</div><h4>إيقاع قابل للتمييز</h4><p>«ماذا قالوا في الكرسي المقابل؟» سببٌ للمتابعة.</p></div>
+          </div>
+        </div>
+        <figure class="imgframe">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053411_86db6605-555f-492b-b349-f04ed09707a3.png" alt="الكرسي المقابل">
+          <figcaption style="padding:.7rem 1rem 1rem">الكرسي المقابل — لحظة متأصّلة في البرنامج</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 THE MAYA MOMENT -->
+  <section class="slide" id="s6">
+    <span class="snum">06</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">The Maya Moment · ماذا يعني ذلك بالنسبة لك؟</div>
+      <div class="quote">
+        <p>«في الاقتصاد، ليست كل زيادة في الأسعار خبراً جيداً، وليست كل موجة صعود فقاعة. التحدي الحقيقي هو التوازن بين حماية قيمة الأصول، والحفاظ على القدرة على السكن والاستثمار. فهذا التوازن هو ما يصنع سوقاً عقارياً مستداماً، لا مجرد سوق يحقق أرقاماً قياسية.»</p>
+        <div class="who">— لحظة مايا، تُختم دائمًا بالمشاهد لا بالضيف</div>
+      </div>
+      <p class="fine" style="margin-top:1.4rem">بعد المقابلة، تتوجه مايا مباشرة إلى الكاميرا — دون ضيف، دون نقاش — لتشرح بلغة بسيطة الأثر العملي على المستثمر، رائد الأعمال، صاحب الشركة، المستهلك، والاقتصاد عمومًا. لا تنحاز، ولا تكرّر كلام الضيف، بل تربط النقاش بفكرة اقتصادية أكبر.</p>
+    </div>
+  </section>
+
+  <!-- 07 PILOT INTRO -->
+  <section class="slide" id="s7">
+    <span class="snum">07</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الحلقة التجريبية · Pilot</div>
+      <div class="grid-2">
+        <div>
+          <span class="pill">الحلقة الأولى — القطاع العقاري</span>
+          <h2 class="title" style="margin-top:1rem">من دبي إلى الرياض...<br>ومن أبوظبي إلى القاهرة.</h2>
+          <p class="lead" style="margin-top:1rem">العقار لم يعد يهم المستثمرين فقط، بل كل شخص يبحث عن منزل، أو يدفع إيجارًا، أو يفكّر في أول تملّك. السؤال ليس «ماذا يحدث في السوق؟» بل: <b class="accent">كيف يؤثر ذلك على بيتك، وإيجارك، وفرصك؟</b></p>
+          <p class="fine" style="margin-top:1rem">الضيف المحتمل: العبار / بن غاطي / سجواني — أحد أبرز قادة القطاع العقاري.</p>
+        </div>
+        <div>
+          <div class="grid-3" style="gap:1rem">
+            <div class="stat"><div class="big">Q1</div><div class="lbl">حجم الاستثمار العقاري في الربع الأول</div></div>
+            <div class="stat"><div class="big">٪</div><div class="lbl">نسبة القروض العقارية من تمويلات البنوك</div></div>
+            <div class="stat"><div class="big">↑↓</div><div class="lbl">ارتفاع الإيجارات أو تراجعها</div></div>
+          </div>
+          <p class="fine" style="margin-top:1rem">«غرفة القرار» تُفتتح بمحتوى مرئي — إنفوجراف أو فيديو — يضع الأرقام أمام المشاهد قبل أن يتكلم الضيف.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 PILOT RUNSHEET -->
+  <section class="slide" id="s8">
+    <span class="snum">08</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">رحلة الحلقة · Runsheet</div>
+      <h2 class="title" style="margin-bottom:1.2rem">تشريح الحلقة التجريبية</h2>
+      <table class="run">
+        <thead><tr><th>المدة</th><th>الفقرة</th><th>المحتوى</th></tr></thead>
+        <tbody>
+          <tr><td class="t">1:30</td><td class="seg">المقدّمة</td><td>بنبرة موجَّهة لمشاهد بعينه: القطاع العقاري يحرّك البنوك، ويقود الاستثمار، ويكشف أين ينمو الاقتصاد وأين تتجه الأموال.</td></tr>
+          <tr><td class="t">—</td><td class="seg">تقديم الضيف</td><td>تعريف موجز يضع الضيف في سياق القرار، لا السيرة الذاتية.</td></tr>
+          <tr><td class="t">~1:00</td><td class="seg">غرفة القرار</td><td>محتوى مرئي: حجم الاستثمار العقاري، نسبة القروض العقارية، حركة الإيجارات.</td></tr>
+          <tr><td class="t">16–18:00</td><td class="seg">محاور الحوار</td><td>استهداف الملفات الساخنة + سرد قصصي لكواليس القطاع + تبسيط المفاهيم + استخراج أرقام وتوقّعات وجداول زمنية حصرية.</td></tr>
+          <tr><td class="t">3–4:00</td><td class="seg">الكرسي المقابل</td><td>خبير عقاري / خبير تمويل عقاري / مستأجر أو باحث عن منزل / مستثمر فرد — يطرح التحدّي، فيردّ الضيف الرئيسي.</td></tr>
+          <tr><td class="t">1:30</td><td class="seg">ماذا يعني لك؟</td><td>مايا إلى الكاميرا: الأثر المباشر على المستثمر، رائد الأعمال، صاحب الشركة، المستهلك.</td></tr>
+          <tr><td class="t">segment</td><td class="seg">اقتصاد الناس</td><td>ربط الخبر بحياة الناس اليومية (مثال: أثر أسعار النفط، حوالات المغتربين...).</td></tr>
+          <tr><td class="t">1:00–1:30</td><td class="seg">لحظة مايا</td><td>فكرة اقتصادية أكبر تُختم بالمشاهد: هل يرتفع المعروض بالسرعة الكافية لتوازن السوق؟</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 09 ECONOMY OF PEOPLE -->
+  <section class="slide" id="s9">
+    <span class="snum">09</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">فقرة أساسية · اقتصاد الناس</div>
+      <div class="grid-2">
+        <div>
+          <h2 class="title">«ما الذي يعنيه<br>هذا الخبر <span class="accent">بالنسبة لي؟»</span></h2>
+          <p class="lead" style="margin-top:1rem">فقرة تربط الأخبار الاقتصادية بحياة الناس اليومية، وتشرح كيف تصل القرارات العالمية إلى كل بيت — سواء ارتبطت بحلقة اليوم أو بقضية أخرى تهمّ الجمهور.</p>
+          <div class="card soft" style="margin-top:1.2rem">
+            <p><b>مثال:</b> ارتفعت أسعار النفط... لكن هذا لا يؤثر على أصحاب السيارات فقط. بل يمتد إلى تكلفة الشحن، وأسعار السلع، وتشغيل المصانع، وفواتير الكهرباء، وربما سعر تذكرة السفر. حتى لو لم تملك سيارة، فقد يصل الارتفاع إلى جيبك بطريقة أو بأخرى.</p>
+          </div>
+        </div>
+        <div>
+          <h3 class="sub" style="margin-bottom:.6rem">أفكار أخرى قابلة للتناول</h3>
+          <div class="chips">
+            <span class="chip red">حوالات المغتربين</span>
+            <span class="chip">البطالة</span>
+            <span class="chip">أسعار الفائدة</span>
+            <span class="chip">التضخّم</span>
+            <span class="chip wood">سعر الصرف</span>
+          </div>
+          <p class="fine" style="margin-top:1.2rem"><b>حوالات المغتربين</b> ليست مجرد أموال يرسلها شخص لعائلته، بل شريان اقتصادي يربط بلدين: يوفّر دخلًا لملايين الأسر ويضخّ عملة أجنبية في بلد الاستقبال، ويعكس قوة سوق العمل في بلد المصدر. لذلك يقرأها الاقتصاديون كمؤشر لا كتحويل مالي.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 CONTENT ECOSYSTEM -->
+  <section class="slide" id="s10">
+    <span class="snum">10</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">منظومة المحتوى · Content Ecosystem</div>
+      <h2 class="title">مقابلة واحدة... تُغذّي <span class="accent">أسبوعًا كاملًا.</span></h2>
+      <p class="lead" style="margin:1rem 0 1.5rem">المقابلة ليست المنتج النهائي، بل المادة الخام التي تُبنى عليها منظومة تحريرية متكاملة عبر كل المنصّات.</p>
+      <div class="chips">
+        <span class="chip red">الحلقة الكاملة</span>
+        <span class="chip red">Hero Clip — أبرز مقطع</span>
+        <span class="chip">فقرة الكرسي المقابل</span>
+        <span class="chip">اقتصاد الناس</span>
+        <span class="chip">لحظة مايا</span>
+        <span class="chip wood">فيديو عمودي × 3–4</span>
+        <span class="chip">تصاميم الاقتباسات</span>
+        <span class="chip">فيديوهات شرح المفاهيم</span>
+        <span class="chip">مقال تحليلي (SEO)</span>
+        <span class="chip">فقرة النشرة البريدية</span>
+        <span class="chip">نسخة بودكاست</span>
+        <span class="chip">LinkedIn</span>
+        <span class="chip">Instagram Reels</span>
+        <span class="chip">TikTok</span>
+        <span class="chip">YouTube Shorts</span>
+      </div>
+      <div class="rule"></div>
+      <p class="fine"><b>جلسة واحدة → أسبوع كامل من التوزيع.</b> الثقل التحريري يُعيد ملء القمع باستمرار دون تسجيل يومي.</p>
+    </div>
+  </section>
+
+  <!-- 11 PRODUCTION + RULES -->
+  <section class="slide" id="s11">
+    <span class="snum">11</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">نموذج الإنتاج والقواعد التحريرية</div>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 class="sub" style="margin-bottom:.6rem">الإيقاع والإنتاج</h3>
+          <ul class="clean">
+            <li><b>حلقة رئيسية أسبوعية</b> — بث في ليلة ثابتة (مساء الأحد/الاثنين).</li>
+            <li><b>تسجيل حلقتين كل أسبوعين</b> في يوم استوديو واحد — لحماية وقت المقدّمة وبناء احتياطي.</li>
+            <li><b>جدول نشر ثابت ومنتظم</b> لتكريس عادة المشاهدة.</li>
+            <li><b>حلقات «سريعة»</b> عند حدث استثنائي (صدمة فائدة، تصعيد جيوسياسي) لتبدو الفرنشايز حيّة.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub" style="margin-bottom:.6rem">ثلاث قواعد تحمي الفرنشايز</h3>
+          <div class="card" style="margin-bottom:.8rem"><div class="n">01</div><h4>ضيف واحد، قرار واحد</h4><p>لا لجان نقاش، ولا استعراض مسيرة مهنية.</p></div>
+          <div class="card" style="margin-bottom:.8rem"><div class="n">02</div><h4>الكرسي المقابل غير قابل للتفاوض</h4><p>حتى مع أرفع الضيوف — وإلا مات مؤشر الاستقلالية.</p></div>
+          <div class="card"><div class="n">03</div><h4>تنتهي كل حلقة بمال المشاهد</h4><p>لا بمجد الضيف — هذا الفارق بين برنامج اقتصادي وسيارة علاقات عامة.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 SEASON 1 -->
+  <section class="slide" id="s12">
+    <span class="snum">12</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الموسم الأول · 12 حلقة مبنيّة على قصص حيّة</div>
+      <table class="season">
+        <thead><tr><th>#</th><th>الضيف / القرار</th><th>الكرسي المقابل</th></tr></thead>
+        <tbody>
+          <tr><td class="ep">1</td><td>قيادة صندوق الاستثمارات العامة — التحوّل 2026-30 نحو 80% محلي و«واقعية الطاقة»</td><td>مدير تخصيص عالمي</td></tr>
+          <tr><td class="ep">2</td><td>صندوق سيادي / مبادلة — الأسواق الخاصة المُرمَّزة وفتحها لصغار المستثمرين</td><td>متشكك من الأسهم الخاصة</td></tr>
+          <tr><td class="ep">3</td><td>مؤسِّس يونيكورن أو رأس مال مغامر إقليمي — أول رهان كبير في الخليج</td><td>مؤسِّس لم يجمع تمويلًا</td></tr>
+          <tr><td class="ep">4</td><td>شركة عائلية وورثتها معًا — نقل الثروة (الحلقة المحورية)</td><td>الأجيال تتحدّى بعضها</td></tr>
+          <tr><td class="ep">5</td><td>البنك المركزي أو VARA — قواعد الأصول الرقمية وإطار الدرهم المستقر</td><td>رائد أعمال تشفير</td></tr>
+          <tr><td class="ep">6</td><td>رئيس شركة مدرجة — تخصيص رأسمال حقيقي (إعادة شراء، توسّع، أرباح)</td><td>مستثمر ناشط أو محلل</td></tr>
+          <tr><td class="ep">7</td><td>تمويل المنشآت واللوجستيات — الائتمان وتكاليف التجارة تحت الاضطراب</td><td>صاحب منشأة صغيرة</td></tr>
+          <tr><td class="ep">8</td><td><b class="accent">قائد في العقارات / التكنولوجيا العقارية — دخول العقار المُرمَّز التيار الرئيسي</b></td><td>وسيط تقليدي أو منظِّم</td></tr>
+          <tr><td class="ep">9</td><td>صانع سياسات أو مصرفي مصري — استقرار الجنيه وواقع المدّخر المغترب</td><td>مدّخر خسر من العملة</td></tr>
+          <tr><td class="ep">10</td><td>مدير صندوق للمغتربين — توجيه رأس المال العربي العالمي نحو المنطقة</td><td>مستثمر مغترب احترق</td></tr>
+          <tr><td class="ep">11</td><td>امرأة تدير مكتب عائلة أو صندوقًا كبيرًا — قرار تخصيص حقيقي</td><td>نظير أو عضو مجلس إدارة</td></tr>
+          <tr><td class="ep">12</td><td>ختام الموسم: وزير أو شخصية بمستوى FII — الرهان الكبير للعام القادم</td><td>اقتصادي مغاير للسائد</td></tr>
+        </tbody>
+      </table>
+      <p class="fine" style="margin-top:.9rem">القطاع العقاري — موضوع حلقتنا التجريبية — يظهر في صميم الموسم (الحلقة 8)، ويمكن تقديمه كحلقة افتتاحية للبايلوت.</p>
+    </div>
+  </section>
+
+  <!-- 13 SET & DESIGN -->
+  <section class="slide" id="s13">
+    <span class="snum">13</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الديكور والهوية البصرية · Set Design</div>
+      <div class="grid-2">
+        <figure class="imgframe">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053408_a3660b48-f321-4e9b-a973-7991c62a24db.png" alt="الطاولة المشتركة مع الضيف">
+          <figcaption style="padding:.7rem 1rem 1rem">الطاولة نفسها عند حضور الضيف — طاولة عالية وكراسٍ عالية</figcaption>
+        </figure>
+        <div>
+          <h2 class="title">بساطة نقيّة...<br>ودفء طبيعي.</h2>
+          <p class="lead" style="margin-top:1rem">استوديو أبيض بالكامل، بسيط ونظيف، طاولة عالية وكراسٍ عالية. مايا تنظر إلى الكاميرا في فقراتها المنفردة، وتنتقل إلى الطاولة نفسها عند وصول الضيف.</p>
+          <ul class="clean">
+            <li><b>القاعدة:</b> أبيض دافئ + عنصر طبيعي واحد (خشب سنديان فاتح / حجر) يمنح الدفء دون أن يزدحم الكادر.</li>
+            <li><b>الإضاءة:</b> ألواح ضوء معمارية ناعمة — تمنح العمق بدل الجدران المزخرفة.</li>
+            <li><b>مبدأ التصميم:</b> «رقيّ مع راهنية» — يبدو المكان ثابتًا وفاخرًا، لا موضة عابرة.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 MATERIAL PALETTE -->
+  <section class="slide" id="s14">
+    <span class="snum">14</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">لوحة الخامات · Material Palette</div>
+      <div class="grid-2">
+        <div>
+          <h3 class="sub">دفء طبيعي على قاعدة بيضاء</h3>
+          <p class="lead" style="margin:.8rem 0">قاعدة بيضاء دافئة يكسرها عنصر طبيعي واحد، مع لمسة حمراء مقتصَدة تربط الهوية بـ CNN Business Arabic دون أن تسيطر.</p>
+          <div class="sw">
+            <div class="swatch" style="background:#F6F2EC"><small>أبيض دافئ</small></div>
+            <div class="swatch" style="background:#E5DDCE"><small>حجر</small></div>
+            <div class="swatch" style="background:#C7A56B;color:#2a2410"><small>سنديان فاتح</small></div>
+            <div class="swatch" style="background:#B01E2E;color:#fff"><small>أحمر CNNBA</small></div>
+            <div class="swatch" style="background:#1B1A18;color:#fff"><small>حبر</small></div>
+          </div>
+        </div>
+        <figure class="imgframe">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053429_9828122b-3bf2-400f-96af-189ded280e78.png" alt="لوحة الخامات">
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 ON-SCREEN GRAPHICS -->
+  <section class="slide" id="s15">
+    <span class="snum">15</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">هوية الشاشة · On-screen Graphics</div>
+      <div class="grid-2">
+        <div>
+          <h2 class="title">رسومات <span class="accent">رقمية أولًا.</span></h2>
+          <p class="lead" style="margin:1rem 0">لا رسومات تلفزيونية مضافة في المونتاج، بل نظام بصري مصمَّم للمنصّات: كتابات متحرّكة (kinetic captions) بالعربية، وبطاقات بيانات نظيفة تُقرأ في لمحة.</p>
+          <ul class="clean">
+            <li><b>Lower-third</b> بخط عربي راقٍ + لمسة حمراء واحدة.</li>
+            <li><b>بطاقات بيانات</b> بمساحة بيضاء واسعة وأرقام كبيرة.</li>
+            <li><b>ترجمة متحرّكة</b> مدمجة من التصوير — أقوى إشارة على «الرقمي لا التلفزيوني».</li>
+          </ul>
+        </div>
+        <figure class="imgframe">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053426_bd2f7b1b-2a22-4f31-ac4c-92d3822e90d7.png" alt="نموذج رسومات الشاشة">
+          <figcaption style="padding:.7rem 1rem 1rem">نموذج Lower-third + بطاقة بيانات (تصميم أوّلي)</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 DIGITAL / VERTICAL -->
+  <section class="slide" id="s16">
+    <span class="snum">16</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الإطار الرقمي · Digital-first</div>
+      <div class="grid-2">
+        <figure class="imgframe" style="max-width:340px;margin-inline:auto">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DIduyBmzwYgrJ6fxIBny2g7uu3/hf_20260701_053413_03426d3f-40ab-429c-8ea5-5b34760f8d3f.png" alt="إطار عمودي 9:16">
+          <figcaption style="padding:.7rem 1rem 1rem;text-align:center">كادر عمودي 9:16 مع مساحات آمنة للترجمة المتحرّكة</figcaption>
+        </figure>
+        <div>
+          <h2 class="title">مُصمَّم للعمودي...<br>لا مُقتطَع منه.</h2>
+          <p class="lead" style="margin:1rem 0">الإضاءة والكادر يخدمان الأفقي والعمودي في آنٍ واحد — مناطق آمنة لقصّ 9:16، لا كادر تلفزيوني يُبتر لاحقًا.</p>
+          <div class="chips">
+            <span class="chip red">TikTok</span><span class="chip red">Reels</span><span class="chip red">Shorts</span>
+            <span class="chip">YouTube</span><span class="chip">LinkedIn</span><span class="chip wood">Podcast</span>
+          </div>
+          <p class="fine" style="margin-top:1rem"><b>تعديلات رقمية مقترحة:</b> ضبط زمن الحلقة الكاملة عند ~22–24 دقيقة، واعتماد «الكرسي المقابل» و«لحظة مايا» كمقاطع البطولة العمودية.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 WHY IT WINS -->
+  <section class="slide" id="s17">
+    <span class="snum">17</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">لماذا سينجح</div>
+      <h2 class="title" style="margin-bottom:1rem">يُركِّز أندر ما تملكه CNNBA</h2>
+      <ul class="clean two-list">
+        <li><b>الوصول</b> إلى أبرز صنّاع القرار الاقتصادي في المنطقة.</li>
+        <li><b>مصداقية تحريرية</b> راسخة.</li>
+        <li><b>أسلوب حواري مهني</b> يجمع الصرامة والإنصاف.</li>
+        <li><b>تبسيط القضايا</b> الاقتصادية بلغة واضحة.</li>
+        <li><b>سرد قصصي</b> مصمَّم أولًا للمنصّات الرقمية.</li>
+        <li><b>منظومة محتوى</b> قابلة للتوسّع وإعادة التوظيف.</li>
+      </ul>
+      <div class="rule"></div>
+      <p class="lead"><b class="accent">«لأن كل قرار اقتصادي كبير... يصل في النهاية إلى محفظة شخص، أو شركته، أو مستقبله.»</b></p>
+    </div>
+  </section>
+
+  <!-- 18 NEXT STEPS -->
+  <section class="slide" id="s18">
+    <span class="snum">18</span><span class="brandmark">CNN<b>BA</b></span>
+    <div class="inner">
+      <div class="kicker">الخطوات التالية</div>
+      <h2 class="title" style="margin-bottom:1.2rem">من الورق إلى الشاشة</h2>
+      <div class="grid-4">
+        <div class="card"><div class="n">01</div><h4>إقرار الهوية</h4><p>اعتماد الاسم، الشعار، لوحة الخامات ونظام الرسومات.</p></div>
+        <div class="card"><div class="n">02</div><h4>بناء الاستوديو</h4><p>تنفيذ الديكور الأبيض والإضاءة المعمارية وخطة الكاميرات (أفقي + عمودي).</p></div>
+        <div class="card"><div class="n">03</div><h4>تصوير البايلوت</h4><p>الحلقة العقارية + تأمين ضيف «الكرسي المقابل».</p></div>
+        <div class="card"><div class="n">04</div><h4>تفعيل المنظومة</h4><p>قصّ المقاطع، النشر عبر المنصّات، وقياس الأداء قبل تفويض الموسم.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 CLOSING -->
+  <footer class="slide end" id="s19">
+    <div class="inner" style="text-align:center">
+      <div class="eyebrow" style="font-family:'Cairo';letter-spacing:.35em;font-size:.85rem;opacity:.7;margin-bottom:1.5rem">CNN BUSINESS ARABIC</div>
+      <h2>غرفة القرار</h2>
+      <p class="accentline" style="font-family:'Cairo';letter-spacing:.3em;margin-top:.5rem">THE DECISION ROOM</p>
+      <p class="lead" style="color:#e9e4da;margin:2rem auto 0;max-width:52ch">مساحة تُطرح فيها أهم القرارات الاقتصادية في المنطقة، وتُناقش، وتُختبر، ثم تُترجم إلى لغة يفهمها كل مشاهد.</p>
+      <p style="margin-top:2.5rem;font-family:'Cairo';font-weight:700;color:var(--wood)">تنتهي كل حلقة بالمشاهد... وليس بالضيف.</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Build nav dots + scroll progress + active state
+  const slides=[...document.querySelectorAll('.slide')];
+  const nav=document.getElementById('nav');
+  slides.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.title=(i+1);nav.appendChild(a);});
+  const dots=[...nav.children];
+  const deck=document.getElementById('deck');
+  const prog=document.getElementById('progress');
+  function onScroll(){
+    const st=deck.scrollTop, h=deck.scrollHeight-deck.clientHeight;
+    prog.style.width=(h>0?(st/h*100):0)+'%';
+    let idx=Math.round(st/deck.clientHeight);
+    idx=Math.max(0,Math.min(slides.length-1,idx));
+    dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  }
+  deck.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('load',onScroll);
+  // Keyboard arrows
+  window.addEventListener('keydown',e=>{
+    const idx=Math.round(deck.scrollTop/deck.clientHeight);
+    if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();slides[Math.min(slides.length-1,idx+1)]?.scrollIntoView({behavior:'smooth'});}
+    if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();slides[Math.max(0,idx-1)]?.scrollIntoView({behavior:'smooth'});}
+  });
+</script>
+</body>
+</html>
